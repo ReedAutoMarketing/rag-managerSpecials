@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="ms-output.css" rel="stylesheet">
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      // Use event delegation for dynamically added 'Redeem Offer' buttons
+      document.getElementById('offers-container').addEventListener('click', function (event) {
+        // Check if the clicked element has the 'modal-open' class
+        if (event.target && event.target.matches('.modal-open')) {
+          event.preventDefault();
+          var couponCode = event.target.getAttribute('data-coupon'); // Get the coupon code from the clicked button
+          var vehicleModel = event.target.getAttribute('data-model'); // Get the vehicle model from the clicked button
+          document.getElementById('couponCode').textContent = couponCode; // Set the coupon code in the modal
+          document.getElementById('vehicleModel').textContent = vehicleModel; // Set the vehicle model in the modal
+          toggleModal();
+        }
+      });
+
+      const overlay = document.querySelector('.modal-overlay')
+      overlay.addEventListener('click', toggleModal)
+
+      var closemodal = document.querySelectorAll('.modal-close')
+      for (var i = 0; i < closemodal.length; i++) {
+        closemodal[i].addEventListener('click', toggleModal)
+      }
+
+      document.onkeydown = function (evt) {
+        evt = evt || window.event
+        var isEscape = false
+        if ("key" in evt) {
+          isEscape = (evt.key === "Escape" || evt.key === "Esc")
+        } else {
+          isEscape = (evt.keyCode === 27)
+        }
+        if (isEscape && document.body.classList.contains('modal-active')) {
+          toggleModal()
+        }
+      };
+
+      function toggleModal() {
+        const body = document.querySelector('body')
+        const modal = document.querySelector('.modal')
+        modal.classList.toggle('opacity-0')
+        modal.classList.toggle('pointer-events-none')
+        body.classList.toggle('modal-active')
+      }
+    });
+  </script>
+</head>
+
+<body class="font-sans bg-gray-50" id="rag-auto">
+  <div class="bg-rag-test-custom">
+
+    <h2 class="text-3xl pt-2 pb-2 p-5 font-bold tracking-tight text-white sm:text-4xl text-center">Manager's Specials
+    </h2>
+    <p class="text-center pb-2 mb-5 text-lg leading-8 text-white">Reed Hyundai of Kansas City</p>
+  </div>
+  <div class="spacer bg-gray-50"></div>
+  <!-- Modal -->
+  <div
+    class="modal modal-z opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+
+      <div class="modal-content py-4 text-left px-6">
+        <!--Title-->
+        <div class="flex justify-between items-center pb-3">
+          <p class="text-2xl font-bold">Special Offer</p>
+          <div class="modal-close cursor-pointer z-50">
+            <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+              viewBox="0 0 18 18">
+              <path
+                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z" />
+            </svg>
+          </div>
+        </div>
+
+        <!--Body-->
+        <p>Screenshot this coupon code and bring it to the dealership to redeem it on your vehicle.</p>
+        <p class="mt-4 font-bold">Vehicle Model: <span id="vehicleModel">Model Name</span></p>
+        <p class="mt-4 font-bold">Coupon Code: <span id="couponCode">ABC123</span></p>
+
+        <!--Footer-->
+        <div class="flex justify-end pt-2">
+          <button class="modal-close px-4 bg-gray-400 p-3 rounded-lg text-white hover:bg-gray-500">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- Adjusted grid-cols for 5 cards per row on large screens -->
+  <div id="offers-container" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 p-4"></div>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    function fetchOffers() {
+      const targetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQfDs7zKph9Fp2zP6JXHP9US1UzsYwYoSVj-zFMAmPjMaEHnpjCmV6dWdyZu9-K1i5EbmrqwCAtcO1X/pub?gid=324909864&single=true&output=csv';
+
+      fetch(targetUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.text();
+        })
+        .then(csvData => {
+          console.log("CSV Data:", csvData); // Debugging line
+          const offers = csvData.split(/\r\n|\n|\r/).slice(1); // Adjusted slice index
+          const offersContainer = document.getElementById('offers-container');
+
+          offers.forEach((offer, index) => {
+            console.log(`Offer ${index}:`, offer); // Debugging line
+            if (!offer.trim()) return;
+            const offerData = offer.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+
+            if (offerData.length < 5 || offerData[4].toLowerCase() !== 'true') return;
+
+            const offerHtml = `
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden relative column-gradient-border">
+              <div class="">
+                <li class="is-active mt-1.5 pb-2 text-center">
+                  <button class="font-bold py-2 px-4 rounded bg-transparent border-2 border-black text-black hover:bg-black hover:text-white transition-colors">Special Offer</button>
+                </li>
+                <div class="px-4">
+                <img src="${offerData[5].replace(/"/g, '')}" alt="${offerData[0].replace(/"/g, '')}" class="rounded w-full">
+                <div class="text-start">
+                <h3 class="text-blue-900 mt-2 md:leading-normal leading-4 text-lg uppercase font-bold">${offerData[0].replace(/"/g, '')}</h3>
+                <p class="text-blue-800 md:leading-normal leading-4 text-lg font-normal">VIN: ${offerData[6].replace(/"/g, '')}</p>
+                <p class="text-blue-800 md:leading-normal leading-4 text-lg font-normal mb-2">Stock: ${offerData[7].replace(/"/g, '')}</p>
+                <p class="text-green-500 lg:text-xl font-bold mb-2">${offerData[1].replace(/"/g, '')}</p>
+                <p class="text-[#333] md:leading-normal leading-4 text-lg font-normal mb-2">Expires on: ${offerData[3].replace(/"/g, '')}</p>
+              </div>
+            </div>
+              <button class="modal-open bg-blue-500 font-bold text-white py-2 px-4 rounded w-full text-center hover:bg-blue-700 transition-colors mt-4" data-coupon="${offerData[2]}" data-model="${offerData[0].replace(/"/g, '')}">Claim Offer</button>
+              </div>
+            </div>
+            `;
+
+            const offerElement = document.createElement('div');
+            offerElement.className = 'offer-card';
+            offerElement.innerHTML = offerHtml;
+            offersContainer.appendChild(offerElement);
+          });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    fetchOffers();
+  </script>
+
+</body>
+
+</html>
