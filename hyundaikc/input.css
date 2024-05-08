@@ -249,13 +249,11 @@ body#rag-auto {
   @media (min-width: 960px) {
     .spacer {
       height: 44px;
-      background-color: white;
     }
   }
 
   .spacer {
     height: 40px;
-    background-color: white;
   }
 
   body#rag-auto {
