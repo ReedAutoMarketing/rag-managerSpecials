@@ -18,7 +18,8 @@
   </div>
   <div class="spacer bg-gray-50"></div>
 
-  <div id="offers-container" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 p-4"></div>
+  <div id="offers-container"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4"></div>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', (event) => {
@@ -72,41 +73,45 @@
             const isAdvertisement = offerData[7] && offerData[7].toLowerCase() === 'true';
 
             const offerHtml = `
-                        <div class="bg-white shadow-lg rounded-lg overflow-hidden relative column-gradient-border h-full flex flex-col">
-                          <div class="flex-grow">
-                            <li class="is-active mt-1.5 pb-2 text-center">
-                              <button class="font-bold py-2 px-4 rounded bg-transparent border-2 border-black text-black hover:bg-black hover:text-white transition-colors">Special Offer</button>
-                            </li>
-                            <div class="px-4">
-                              ${isAdvertisement ? `
-                                <div class="max-h-[305.5px]">
-                                  <img src="${offerData[6].replace(/"/g, '')}" alt="${offerData[0].replace(/"/g, '')}" class="rounded w-full max-h-[305.5px]">
-                                </div>
-                              ` : `
-                              <div class="flex flex-col h-[305.5px]">
-                                <img src="${offerData[6].replace(/"/g, '')}" alt="${offerData[0].replace(/"/g, '')}" class="rounded w-full">
-                                <p class="pl-2 text-blue-950 md:leading-normal leading-4 text-sm font-normal mt-1">Stock: ${offerData[2].replace(/"/g, '')}</p>
-                                    <p class="pl-2 text-blue-950 md:leading-normal leading-4 text-sm font-normal -mt-1">VIN: ${offerData[5].replace(/"/g, '')}</p>
-                              </div>
-                                `}
-                              <div class="text-start pl-2 relative">
-                                <div class="flex flex-col justify-end items-start">
-                                  <h3 class="text-blue-800 mt-2 md:leading-normal leading-4 text-base capitalize font-medium mt-2">${offerData[0].replace(/"/g, '')}</h3>
-                                  <p class="text-green-500 text-base font-medium mb-2">${offerData[1].replace(/"/g, '')}</p>
-                                  <p class="text-[#333] text-blue-950 md:leading-normal leading-4 text-sm font-normal mb-2">Expires on: ${offerData[3].replace(/"/g, '')}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="mt-auto w-full">
-                            <button class="claim-offer bg-blue-500 font-bold text-white py-2 px-4 rounded w-full text-center hover:bg-blue-700 transition-colors mt-4"
-                              data-coupon="${offerData[2]}" data-discount="${offerData[1].replace(/"/g, '')}" data-model="${offerData[0].replace(/"/g, '')}"
-                              data-toggle="modal" data-vin="${offerData[5].replace(/"/g, '')}" data-target="#DIModal" data-modal-content="#managerSpecialsForm" data-modal-title="${offerData[0].replace(/"/g, '')}">
-                              Claim Offer
-                            </button>
-                          </div>
-                        </div>
-              `;
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden relative column-gradient-border h-full flex flex-col">
+              <div class="flex-grow">
+                <li class="is-active mt-1.5 pb-2 text-center">
+                  <button class="font-bold py-2 px-4 rounded bg-transparent border-2 border-black text-black hover:bg-black hover:text-white transition-colors">Special Offer</button>
+                </li>
+                <div class="px-4">
+                  ${isAdvertisement ? `
+                    <div class="">
+                      <img src="${offerData[6].replace(/"/g, '')}" alt="${offerData[0].replace(/"/g, '')}" class="rounded w-full ">
+                    </div>
+                  ` : `
+                  <div class="flex flex-col">
+                    <img src="${offerData[6].replace(/"/g, '')}" alt="${offerData[0].replace(/"/g, '')}" class="rounded w-full">
+                    <div class="flex flex-col items-start justify-center mt-2">
+                    <p class="pl-2 text-blue-950 md:leading-normal leading-4 text-sm font-normal mt-1">Stock: ${offerData[2].replace(/"/g, '')}</p>
+                    <p class="pl-2 text-blue-950 md:leading-normal leading-4 text-sm font-normal">VIN: ${offerData[5].replace(/"/g, '')}</p>
+                    </div>
+                  </div>
+                    `}
+                    <div class="h-20 sm:h-20 md:h-24">
+                  <div class="text-start pl-2 absolute xl:bottom-[8%] lg:bottom-[9%] md:bottom-[8%] sm:bottom-[7%] bottom-[8.5%] left-[16px]">
+                    <div class="flex flex-col justify-end items-start">
+                      <h3 class="text-blue-800 mt-2 md:leading-normal leading-4 text-base capitalize font-medium mt-2">${offerData[0].replace(/"/g, '')}</h3>
+                      <p class="text-green-500 text-base font-medium mb-2">${offerData[1].replace(/"/g, '')}</p>
+                      <p class="text-[#333] text-blue-950 md:leading-normal leading-4 text-sm font-normal mb-2">Expires on: ${offerData[3].replace(/"/g, '')}</p>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-auto w-full">
+                <button class="claim-offer bg-blue-500 font-bold text-white py-2 px-4 rounded w-full text-center hover:bg-blue-700 transition-colors mt-4"
+                  data-coupon="${offerData[2]}" data-discount="${offerData[1].replace(/"/g, '')}" data-model="${offerData[0].replace(/"/g, '')}"
+                  data-toggle="modal" data-vin="${offerData[5].replace(/"/g, '')}" data-target="#DIModal" data-modal-content="#managerSpecialsForm" data-modal-title="${offerData[0].replace(/"/g, '')}">
+                  Claim Offer
+                </button>
+              </div>
+            </div>
+  `;
 
             const offerElement = document.createElement('div');
             offerElement.className = 'offer-card';
